@@ -21,7 +21,7 @@ $$;
 
 -- Create updated_at trigger function
 CREATE OR REPLACE FUNCTION trigger_set_updated_at()
-RETURN TRIGGER AS $$
+RETURNS TRIGGER AS $$
 BEGIN 
     NEW.updated_at = CURRENT_TIMESTAMP;
     RETURN NEW;
