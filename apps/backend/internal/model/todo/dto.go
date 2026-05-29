@@ -87,3 +87,25 @@ func (q *GetTodosQuery) Validate() error{
 
 		return nil 
 }
+
+//-----------------------------------------------------
+
+type GetTodoByIDPayload struct{
+	  ID  uuid.UUID `param:"id"  validate:"required,uuid"`
+}
+
+func (p *GetTodoByIDPayload) Validate() error{
+	  validate := validator.New()
+		return validate.Struct(p)
+}
+
+//-----------------------------------------------------
+
+// type DeleteTodoPayload struct{
+// 	  ID uuid.UUID `param:"id"  validate:"required,uuid"`
+// }
+
+// func (p *DeleteTodoPayload) Validate() error{
+// 	  validate := validator.New()
+// 		return validate.Struct(p)
+// }
