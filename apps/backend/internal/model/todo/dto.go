@@ -101,11 +101,11 @@ func (p *GetTodoByIDPayload) Validate() error{
 
 //-----------------------------------------------------
 
-// type DeleteTodoPayload struct{
-// 	  ID uuid.UUID `param:"id"  validate:"required,uuid"`
-// }
+type DeleteTodoPayload struct{
+	  ID uuid.UUID `param:"id"  validate:"required,uuid"`
+}
 
-// func (p *DeleteTodoPayload) Validate() error{
-// 	  validate := validator.New()
-// 		return validate.Struct(p)
-// }
+func (p *DeleteTodoPayload) Validate() error{
+	  validate := validator.New()
+		return validate.Struct(p)
+}
