@@ -109,3 +109,11 @@ func (p *DeleteTodoPayload) Validate() error{
 	  validate := validator.New()
 		return validate.Struct(p)
 }
+
+//-----------------------------------------------------
+
+type GetTodoStatsPayload struct{}
+
+func (p *GetTodoStatsPayload) Validate() error{
+	  return nil
+}
