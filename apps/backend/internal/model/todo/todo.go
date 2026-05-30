@@ -5,6 +5,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/sriniously/go-tasker/internal/model"
+	"github.com/sriniously/go-tasker/internal/model/category"
+	"github.com/sriniously/go-tasker/internal/model/comment"
 )
 
 type Status string
@@ -44,4 +46,11 @@ type Metadata struct{
 		Reminder   *string  `json:"reminder"`
 		Color      *string  `json:"color"`
 		Difficulty *int     `json:"difficulty"`
+}
+
+type PopulatedTodo struct{
+	 Todo
+	 Category *category.Category  `json:"category" db:"category"`
+	 Children []Todo              `json:"children" db:"children"`
+   Comments []comment.Comment   `json:"comments" db:"comments"`
 }
