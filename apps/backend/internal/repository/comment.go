@@ -111,3 +111,23 @@ func (r *CommentRepository) UpdateComment(ctx context.Context, userID string, co
 
 	 return &commentItem, err
 }
+
+func (r *CommentRepository) DeleteComment(ctx context.Context, userID string, commentID uuid.UUID) error{
+	 stmt := `
+	   DELETE FROM todo_comments
+		 WHERE id=@id AND user_id=@user_id
+	 `
+	 results, err := r.server.DB.Pool.Exec(ctx, stmt, pgx.NamedArgs{
+		  "id": commentID,
+			"user_id": userID,
+	 })
+   if err != nil{
+		   return fmt.Errorf("failed to delete comment query for comment_id=%s, user_id=%s: %w", commentID.String(), userID, err)
+	 }
+
+	 if results.RowsAffected() == 0 {
+		   return fmt.Errorf("comment not found")
+	 }
+
+	 return nil
+}
