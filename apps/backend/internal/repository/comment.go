@@ -87,27 +87,27 @@ func(r *CommentRepository) GetCommentByID(ctx context.Context, userID string, co
 		return &commentItem, nil
 }
 
-// func (r *CommentRepository) UpdateComment(ctx context.Context, userID string, commentID uuid.UUID, content string)(*comment.Comment, error) {
-// 	 stmt := `
-// 	   UPDATE todo_comments
-// 		 SET content=@content
-// 		 WHERE id=@id AND user_id=@user_id
-// 		 RETURNING *
-// 	 `
+func (r *CommentRepository) UpdateComment(ctx context.Context, userID string, commentID uuid.UUID, content string)(*comment.Comment, error) {
+	 stmt := `
+	   UPDATE todo_comments
+		 SET content=@content
+		 WHERE id=@id AND user_id=@user_id
+		 RETURNING *
+	 `
 
-// 	 rows, err := r.server.DB.Pool.Query(ctx, stmt, pgx.NamedArgs{
-// 		  "id": commentID,
-// 			"user_id": userID,
-// 			"content": content,
-// 	 })
-// 	 if err != nil{
-// 		   return nil, fmt.Errorf("failed to execute update comment query for comment_id=%s, user_id=%s: %w", commentID.String(), userID, err)
-// 	 }
+	 rows, err := r.server.DB.Pool.Query(ctx, stmt, pgx.NamedArgs{
+		  "id": commentID,
+			"user_id": userID,
+			"content": content,
+	 })
+	 if err != nil{
+		   return nil, fmt.Errorf("failed to execute update comment query for comment_id=%s, user_id=%s: %w", commentID.String(), userID, err)
+	 }
 
-// 	 commentItem, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[comment.Comment])
-// 	 if err != nil{
-// 		   return nil, fmt.Errorf("failed to collect row for table:todo_comments for comment_id=%s, user_id=%s: %w", commentID.String(), userID, err)
-// 	 }
+	 commentItem, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[comment.Comment])
+	 if err != nil{
+		   return nil, fmt.Errorf("failed to collect row for table:todo_comments for comment_id=%s, user_id=%s: %w", commentID.String(), userID, err)
+	 }
 
-// 	 return &commentItem, err
-// }
+	 return &commentItem, err
+}
