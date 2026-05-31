@@ -373,10 +373,75 @@ func (r *TodoRepository) UpdateTodo(ctx context.Context, userID string, payload 
 	 return &updateTodo, nil
 }
 
-// func (r *TodoRepository) DeleteTodo(ctx context.Context, userID string, todoID uuid.UUID) error{
-// 	  stmt := `
-		  
-		
-// 		`
-// }
+func (r *TodoRepository) DeleteTodo(ctx context.Context, userID string, todoID uuid.UUID) error{
+	  stmt := `
+		  DELETE FROM todos
+			WHERE id=@todo_id AND user_id=@user_id
+		`
+
+		result, err := r.server.DB.Pool.Exec(ctx, stmt, pgx.NamedArgs{
+			"todo_id": todoID,
+			"user_id": userID,
+		})
+		if err != nil{
+			  return fmt.Errorf("failed to exectute query: %w", err)
+		}
+
+		if result.RowsAffected() == 0 {
+			  code := "TODO_NOT_FOUND"
+				return errs.NewNotFoundError("todo not found", false, &code)
+		}
+
+		return nil
+}
+
+func (r *TodoRepository) GetTodoStats(ctx context.Context, userID string) (*todo.TodoStats, error){
+	 stmt := `
+	   SELECT 
+		     COUNT(*) AS total,
+         COUNT(
+				     CASE 
+						    WHEN status='draft' THEN 1
+						 END
+				 ) AS draft,
+				 COUNT(
+				     CASE 
+						    WHEN status='active' THEN 1
+						 END
+				 ) AS active,
+				 COUNT(
+				     CASE 
+						    WHEN status='completed' THEN 1
+						 END
+				 ) AS completed,
+				 COUNT(
+				     CASE 
+						    WHEN status='archived' THEN 1
+						 END
+				 ) AS archived,
+				 COUNT(
+				     CASE 
+						    WHEN due_date<NOW()
+						    AND status!='completed' THEN 1
+						 END
+				 ) AS overdue
+		 FROM
+		     todos
+		 WHERE 
+		     user_id=@user_id
+	 `
+	 rows, err := r.server.DB.Pool.Query(ctx, stmt, pgx.NamedArgs{
+		 "user_id": userID,
+	 })
+	 if err != nil{
+		   return nil, fmt.Errorf("failed to execute query: %w", err)
+	 }
+
+	 stats, err := pgx.CollectOneRow(rows, pgx.RowToStructByName[todo.TodoStats])
+	 if err != nil{
+		   return nil, fmt.Errorf("failed to collect row from table:todos: %w", err)
+	 }
+
+	 return &stats, nil
+}
   
