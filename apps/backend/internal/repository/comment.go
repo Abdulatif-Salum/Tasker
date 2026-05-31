@@ -122,7 +122,7 @@ func (r *CommentRepository) DeleteComment(ctx context.Context, userID string, co
 			"user_id": userID,
 	 })
    if err != nil{
-		   return fmt.Errorf("failed to delete comment query for comment_id=%s, user_id=%s: %w", commentID.String(), userID, err)
+		   return fmt.Errorf("failed to delete comment for comment_id=%s, user_id=%s: %w", commentID.String(), userID, err)
 	 }
 
 	 if results.RowsAffected() == 0 {
